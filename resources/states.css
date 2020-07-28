@@ -77,6 +77,17 @@ path.domain {
   color: rgba(28, 28, 28, .5);
   font-size: 2rem;
 }
+#footer {
+  position: absolute;
+  bottom: 0;
+  fill: #1C1C1C;
+  font-family: "ABCSans Regular", "Arial", sans-serif;
+  font-size: .95rem;
+}
+#footer span {
+  font-family: "ABCSans Light", "Arial Narrow", sans-serif;
+  font-size: .85rem;
+}
 @media (max-width: 500px) {
   #label {
     font-size: 1.5rem;

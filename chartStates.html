@@ -27,6 +27,9 @@
         <g id="axisGroup"></g>
         <g id="chartGroup"></g>
       </svg>
+      <div id="footer">
+        All state and local taxes on insurance and property, including rates and stamp duty, per person. <span>Source: ABS catalogue 5506.0</span>
+      </div>
     </div>
     <script>
       // load chart data
@@ -46,8 +49,9 @@
         chartGroup = d3.select("#chartGroup");
         axisGroup = d3.select("#axisGroup");
         label = d3.select("#label");
+        footer = d3.select("#footer");
         // set up
-        margin = { top: 32, right: 16, bottom: 20, left: 5 };
+        margin = { right: 16, left: 5 };
         x = d3.scaleLinear();
         y = d3.scaleBand()
           .padding(.1)
@@ -77,7 +81,9 @@
         dimensions = document.body.getBoundingClientRect();
         width = dimensions.width;
         height = dimensions.height;
-        if (width > 500) margin.top = 40;
+        let footerHeight = parseFloat(footer.style("height"));
+        margin.top = width > 500 ? 40 : 32;
+        margin.bottom = footerHeight + 32;
         x.range([margin.left, width - margin.right]);
         y.range([margin.top, height - margin.bottom]);
         axis.ticks(width < 500 ? 3 : 5)
