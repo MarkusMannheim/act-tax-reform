@@ -28,7 +28,7 @@
         <g id="chartGroup"></g>
       </svg>
       <div id="footer">
-        All state and local taxes on insurance and property, including rates and stamp duty, per person. <span>Source: ABS catalogue 5506.0</span>
+        All state and local taxes on insurance and property (including rates and stamp duty), per person. <span>Source: ABS catalogue 5506.0</span>
       </div>
     </div>
     <script>
@@ -67,12 +67,14 @@
       // begin animation
       function start() {
         year = 0;
+        resize();
         cycle = d3.interval(function() {
-          resize();
           year = year + 1;
           if (year >= years.length) {
             cycle.stop();
             d3.timeout(start, loop);
+          } else {
+            resize();
           }
         }, loop * 2);
       }
