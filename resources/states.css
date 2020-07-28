@@ -47,6 +47,11 @@ body {
   font-size: 1.25rem;
   opacity: 0;
 }
+.bar .value {
+  font-family: "ABCSans Regular", "Arial", sans-serif;
+  text-anchor: end;
+  font-size: 1rem;
+}
 .all {
   fill: #00A388;
 }
@@ -70,5 +75,10 @@ path.domain {
   text-align: right;
   right: 0;
   color: rgba(28, 28, 28, .5);
-  font-size: 1.5rem;
+  font-size: 2rem;
+}
+@media (max-width: 500px) {
+  #label {
+    font-size: 1.5rem;
+  }
 }

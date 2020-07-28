@@ -50,7 +50,8 @@
         margin = { top: 32, right: 16, bottom: 20, left: 5 };
         x = d3.scaleLinear();
         y = d3.scaleBand()
-          .padding(.1);
+          .padding(.1)
+          .paddingOuter(.2);
         axis = d3.axisBottom(x)
           .tickSizeOuter(0)
           .tickPadding(8)
@@ -69,13 +70,14 @@
             cycle.stop();
             d3.timeout(start, loop);
           }
-        }, loop * 1.5);
+        }, loop * 2);
       }
       // set page dimensions
       function resize() {
         dimensions = document.body.getBoundingClientRect();
         width = dimensions.width;
         height = dimensions.height;
+        if (width > 500) margin.top = 40;
         x.range([margin.left, width - margin.right]);
         y.range([margin.top, height - margin.bottom]);
         axis.ticks(width < 500 ? 3 : 5)
@@ -116,22 +118,55 @@
             .attr("width", function(d) { return x(d.combo) - x(0); });
         entering.append("text")
           .text(function(d) { return d.jurisdiction; })
-          .attr("x", margin.left + 16)
-          .attr("y", function(d) { return y(d.jurisdiction) + y.bandwidth() / 2 + 10; })
+          .attr("x", 80)
+          .attr("y", function(d) { return y(d.jurisdiction) + y.bandwidth() / 2 + 8; })
           .attr("width", 0)
+          .classed("jurisdiction", true)
           .transition()
             .duration(loop)
             .style("opacity", 1);
+        entering.append("text")
+          .classed("value", true)
+          .attr("id", function(d) { return d.jurisdiction.replace(" ", ""); })
+          .text(function(d) { return d3.format("$,.0f")(0); })
+          .attr("x", 64)
+          .attr("y", function(d) { return y(d.jurisdiction) + y.bandwidth() / 2 + 6; })
+          .attr("width", 0)
+          .transition()
+            .duration(loop)
+            .style("opacity", 1)
+            .tween("text", function(d) {
+              let start = parseFloat(d3.select(this).text().replace(",", "").replace("$", ""));
+              let target = d.combo;
+              return function(t) {
+                let value = d3.format("$,.0f")(start + t * (target - start));
+                d3.select("#" + d.jurisdiction.replace(" ", ""))
+                  .text(value);
+              };
+            });
         bars.select("rect")
           .attr("height", y.bandwidth())
           .transition()
             .duration(loop)
             .attr("y", function(d) { return y(d.jurisdiction); })
             .attr("width", function(d) { return x(d.combo) - x(0); })
-        bars.select("text")
+        bars.select(".jurisdiction")
           .transition()
             .duration(loop)
-            .attr("y", function(d) { return y(d.jurisdiction) + y.bandwidth() / 2 + 10; });
+            .attr("y", function(d) { return y(d.jurisdiction) + y.bandwidth() / 2 + 8; });
+        bars.select(".value")
+          .transition()
+            .duration(loop)
+            .attr("y", function(d) { return y(d.jurisdiction) + y.bandwidth() / 2 + 6; })
+            .tween("text", function(d) {
+              let start = parseFloat(d3.select(this).text().replace(",", "").replace("$", ""));
+              let target = d.combo;
+              return function(t) {
+                let value = d3.format("$,.0f")(start + t * (target - start));
+                d3.select("#" + d.jurisdiction.replace(" ", ""))
+                  .text(value);
+              };
+            });
         axisGroup.transition()
           .duration(loop)
           .call(axis);
